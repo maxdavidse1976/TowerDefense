@@ -4,7 +4,7 @@ using Debug = UnityEngine.Debug;
 
 public class Tower : MonoBehaviour
 {
-    [SerializeField] EnemySpawner _enemySpawner;
+    
     [SerializeField] Transform _towerHead;
 
     [Header("Attack details")]
@@ -17,6 +17,12 @@ public class Tower : MonoBehaviour
     [SerializeField] float _bulletSpeed = 3f;
 
     Transform _enemy;
+    EnemySpawner _enemySpawner;
+
+    void Awake()
+    {
+        _enemySpawner = FindFirstObjectByType<EnemySpawner>();   
+    }
 
     void Update()
     {
@@ -45,7 +51,7 @@ public class Tower : MonoBehaviour
         float closestDistance = float.MaxValue;
         Transform closestEnemy = null;
         
-        foreach (Transform enemy in _enemySpawner.Enemies)
+        foreach (Transform enemy in _enemySpawner.Enemies())
         {
             float distanceToTower = Vector3.Distance(enemy.position, transform.position);
             if (distanceToTower < closestDistance && distanceToTower <= _attackRange)
@@ -57,7 +63,7 @@ public class Tower : MonoBehaviour
 
         if (closestEnemy != null)
         {
-            _enemySpawner.Enemies.Remove(closestEnemy);
+            _enemySpawner.Enemies().Remove(closestEnemy);
         }
 
         return closestEnemy;
@@ -65,11 +71,11 @@ public class Tower : MonoBehaviour
 
     void FindRandomEnemy()
     {
-        if (_enemySpawner.Enemies.Count <= 0) return;
+        if (_enemySpawner.Enemies().Count <= 0) return;
 
-        int randomIndex = Random.Range(0, _enemySpawner.Enemies.Count);
-        _enemy = _enemySpawner.Enemies[randomIndex];
-        _enemySpawner.Enemies.RemoveAt(randomIndex);
+        int randomIndex = Random.Range(0, _enemySpawner.Enemies().Count);
+        _enemy = _enemySpawner.Enemies()[randomIndex];
+        _enemySpawner.Enemies().RemoveAt(randomIndex);
     }
 
     bool ShootingNotOnCooldown()

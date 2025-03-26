@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
@@ -11,7 +12,8 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] float _minZPosition = -4f;
     [SerializeField] float _maxZPosition = 4f;
 
-    public List<Transform> Enemies;
+    List<Transform> _enemies = new List<Transform>();
+
     void Start()
     {
         SpawnEnemies();
@@ -23,7 +25,9 @@ public class EnemySpawner : MonoBehaviour
         {
             Vector3 enemyPosition = new Vector3(Random.Range(_minXPosition, _maxXPosition), transform.position.y, Random.Range(_minZPosition, _maxZPosition));
             GameObject newEnemy = Instantiate(_enemyPrefab, enemyPosition, Quaternion.identity);
-            Enemies.Add(newEnemy.transform);
+            _enemies.Add(newEnemy.transform);
         }
     }
+
+    public List<Transform> Enemies() => _enemies;
 }
